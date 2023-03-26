@@ -1,8 +1,7 @@
 package com.developersstack.edumanage.controller;
 
-import com.developersstack.edumanage.db.Database;
 import com.developersstack.edumanage.db.DatabaseAccessCode;
-import com.developersstack.edumanage.model.User;
+import com.developersstack.edumanage.entity.User;
 import com.developersstack.edumanage.util.security.PasswordManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -12,11 +11,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Optional;
 
 public class LoginFormController {
     public AnchorPane context;

@@ -1,9 +1,9 @@
 package com.developersstack.edumanage.db;
 
-import com.developersstack.edumanage.model.Program;
-import com.developersstack.edumanage.model.Student;
-import com.developersstack.edumanage.model.Teacher;
-import com.developersstack.edumanage.model.User;
+import com.developersstack.edumanage.entity.Program;
+import com.developersstack.edumanage.entity.Student;
+import com.developersstack.edumanage.entity.Teacher;
+import com.developersstack.edumanage.entity.User;
 import com.developersstack.edumanage.util.security.PasswordManager;
 
 import java.util.ArrayList;

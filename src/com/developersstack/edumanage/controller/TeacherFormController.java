@@ -1,10 +1,7 @@
 package com.developersstack.edumanage.controller;
 
-import com.developersstack.edumanage.db.Database;
 import com.developersstack.edumanage.db.DatabaseAccessCode;
-import com.developersstack.edumanage.model.Student;
-import com.developersstack.edumanage.model.Teacher;
-import com.developersstack.edumanage.view.tm.StudentTm;
+import com.developersstack.edumanage.entity.Teacher;
 import com.developersstack.edumanage.view.tm.TeacherTm;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,11 +15,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Optional;
 
 public class TeacherFormController {

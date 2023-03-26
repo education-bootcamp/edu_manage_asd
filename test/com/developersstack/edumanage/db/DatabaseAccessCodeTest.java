@@ -1,7 +1,7 @@
 package com.developersstack.edumanage.db;
 
 
-import com.developersstack.edumanage.model.Student;
+import com.developersstack.edumanage.entity.Student;
 
 import java.sql.SQLException;
 import java.util.Date;

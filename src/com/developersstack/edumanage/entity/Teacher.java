@@ -1,4 +1,4 @@
-package com.developersstack.edumanage.model;
+package com.developersstack.edumanage.entity;
 
 public class Teacher {
     private String code;

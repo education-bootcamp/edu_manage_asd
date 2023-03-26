@@ -1,8 +1,7 @@
 package com.developersstack.edumanage.controller;
 
-import com.developersstack.edumanage.db.Database;
 import com.developersstack.edumanage.db.DatabaseAccessCode;
-import com.developersstack.edumanage.model.Student;
+import com.developersstack.edumanage.entity.Student;
 import com.developersstack.edumanage.view.tm.StudentTm;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
