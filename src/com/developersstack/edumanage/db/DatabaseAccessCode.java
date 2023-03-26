@@ -49,7 +49,7 @@ public class DatabaseAccessCode {
 
     public String findStudentLastId() throws SQLException, ClassNotFoundException {
         Connection connection = DbConnection.getInstance().getConnection();
-        PreparedStatement stm = connection.prepareStatement("SELECT student_id FROM student ORDER BY student_id DESC LIMIT 1");
+        PreparedStatement stm = connection.prepareStatement("SELECT student_id FROM student ORDER BY CAST(SUBSTRING(student_id,3) AS UNSIGNED) DESC LIMIT 1");
         ResultSet rst = stm.executeQuery();
         if (rst.next()) {
             return rst.getString(1);
