@@ -29,20 +29,6 @@ public class LoginFormController {
         String email = txtEmail.getText().toLowerCase();
         String password = txtPassword.getText().trim();
 
-       /* for (User user : Database.userTable){
-            if (user.getEmail().equals(email)){
-               if (user.getPassword().equals(password)){
-                   System.out.println(user.toString());
-                   return;
-               }else{
-                   new Alert(Alert.AlertType.ERROR,
-                          "Wrong Password!").show();
-                   return;
-               }
-            }
-        }
-        new Alert(Alert.AlertType.WARNING,
-                String.format("user not found (%s)",email)).show();*/
        Optional<User> selectedUser =
                Database.userTable.stream().filter(e->e.getEmail().equals(email)).findFirst();
        if (selectedUser.isPresent()){
