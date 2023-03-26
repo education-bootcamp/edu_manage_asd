@@ -1,6 +1,7 @@
 package com.developersstack.edumanage.controller;
 
 import com.developersstack.edumanage.db.Database;
+import com.developersstack.edumanage.db.DatabaseAccessCode;
 import com.developersstack.edumanage.model.Student;
 import com.developersstack.edumanage.view.tm.StudentTm;
 import javafx.collections.FXCollections;
@@ -14,6 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -36,9 +38,9 @@ public class StudentFormController {
     public Button btn;
     public TextField txtSearch;
 
-    String searchText="";
+    String searchText = "";
 
-    public void initialize(){
+    public void initialize() {
 
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
@@ -50,17 +52,17 @@ public class StudentFormController {
         setTableData(searchText);
 
         txtSearch.textProperty().addListener((observable, oldValue, newValue) -> {
-            searchText=newValue;
+            searchText = newValue;
             setTableData(searchText);
         });
 
         tblStudents.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    if (null!=newValue){
+                    if (null != newValue) {
                         setData(newValue);
                     }
-        });
+                });
     }
 
     private void setData(StudentTm tm) {
@@ -73,90 +75,115 @@ public class StudentFormController {
 
     private void setTableData(String searchText) {
         ObservableList<StudentTm> obList = FXCollections.observableArrayList();
-        for (Student st:Database.studentTable
-             ) {
-            if (st.getFullName().contains(searchText)){
-                Button btn= new Button("Delete");
-                StudentTm tm = new StudentTm(
-                        st.getStudentId(),
-                        st.getFullName(),
-                        new SimpleDateFormat("yyyy-MM-dd").format(st.getDateOfBirth()),
-                        st.getAddress(),
-                        btn
-                );
-
-                btn.setOnAction(e->{
-                    Alert alert= new Alert(
-                            Alert.AlertType.CONFIRMATION,
-                            "Are you sure?",
-                            ButtonType.YES,ButtonType.NO
+        try {
+            for (Student st : new DatabaseAccessCode().findAllStudents(searchText)
+            ) {
+                    Button btn = new Button("Delete");
+                    StudentTm tm = new StudentTm(
+                            st.getStudentId(),
+                            st.getFullName(),
+                            new SimpleDateFormat("yyyy-MM-dd").format(st.getDateOfBirth()),
+                            st.getAddress(),
+                            btn
                     );
-                    Optional<ButtonType> buttonType = alert.showAndWait();
-                    if (buttonType.get().equals(ButtonType.YES)){
-                        Database.studentTable.remove(st);
-                        new Alert(Alert.AlertType.INFORMATION, "Deleted!").show();
-                        setTableData(searchText);
-                        setStudentId();
-                    }
-                });
 
-                obList.add(tm);
+                    btn.setOnAction(e -> {
+                        Alert alert = new Alert(
+                                Alert.AlertType.CONFIRMATION,
+                                "Are you sure?",
+                                ButtonType.YES, ButtonType.NO
+                        );
+                        Optional<ButtonType> buttonType = alert.showAndWait();
+                        if (buttonType.get().equals(ButtonType.YES)) {
+                            try{
+                                boolean isDeleted = new DatabaseAccessCode().deleteStudent(st.getStudentId());
+                                if (isDeleted) {
+                                    new Alert(Alert.AlertType.INFORMATION, "Student Deleted!").show();
+                                    setTableData(searchText);
+                                    setStudentId();
+                                } else {
+                                    new Alert(Alert.AlertType.WARNING, "Try Again").show();
+                                }
+                            }catch (SQLException | ClassNotFoundException exception) {
+                                exception.printStackTrace();
+                            }
+
+                            new Alert(Alert.AlertType.INFORMATION, "Deleted!").show();
+
+                        }
+                    });
+                    obList.add(tm);
 
             }
-
+            tblStudents.setItems(obList);
+        }catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
-        tblStudents.setItems(obList);
     }
 
     private void setStudentId() {
-        if (!Database.studentTable.isEmpty()){
-            Student lastStudent = Database.studentTable.get(
-                    Database.studentTable.size()-1
-            );
-            String lastId= lastStudent.getStudentId();
-            String splitData[] = lastId.split("-");
-            String lastIdIntegerNumberAsAString = splitData[1];
-            int lastIntegerIdAsInt=Integer.parseInt(lastIdIntegerNumberAsAString);
-            lastIntegerIdAsInt++;
-            String generatedStudentId="S-"+lastIntegerIdAsInt;
-            txtId.setText(generatedStudentId);
-        }else{
-            txtId.setText("S-1");
+        try {
+            String selectedId = new DatabaseAccessCode().findStudentLastId();
+            if (null != selectedId) {
+                String splitData[] = selectedId.split("-");
+                String lastIdIntegerNumberAsAString = splitData[1];
+                int lastIntegerIdAsInt = Integer.parseInt(lastIdIntegerNumberAsAString);
+                lastIntegerIdAsInt++;
+                String generatedStudentId = "S-" + lastIntegerIdAsInt;
+                txtId.setText(generatedStudentId);
+            } else {
+                txtId.setText("S-1");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
     public void saveOnAction(ActionEvent actionEvent) {
-        if (btn.getText().equalsIgnoreCase("Save Student")){
-            Student student = new Student(
-                    txtId.getText(),
-                    txtName.getText(),
-                    Date.from(txtDob.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                    txtAddress.getText()
-            );
-            Database.studentTable.add(student);
-            setStudentId();
-            clear();
-            setTableData(searchText);
-            new Alert(Alert.AlertType.INFORMATION, "Student saved!").show();
-        }else{
-            for (Student st:Database.studentTable
-                 ) {
-                if (st.getStudentId().equals(txtId.getText())){
-                    st.setAddress(txtAddress.getText());
-                    st.setFullName(txtName.getText());
-                    st.setDateOfBirth(Date.from(txtDob.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-                    setTableData(searchText);
-                    clear();
+        Student student = new Student(
+                txtId.getText(),
+                txtName.getText(),
+                Date.from(txtDob.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                txtAddress.getText()
+        );
+        if (btn.getText().equalsIgnoreCase("Save Student")) {
+            try {
+                boolean isSaved = new DatabaseAccessCode().saveStudent(student);
+                if (isSaved) {
+                    new Alert(Alert.AlertType.INFORMATION, "Student Saved!").show();
                     setStudentId();
-                    btn.setText("Save Student");
-                    return;
+                    clear();
+                    setTableData(searchText);
+                } else {
+                    new Alert(Alert.AlertType.WARNING, "Try Again").show();
                 }
+            } catch (SQLException | ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, e.toString()).show();
             }
-            new Alert(Alert.AlertType.WARNING, "Not Found").show();
+
+        } else {
+
+            try {
+                Student selectedStudent = new DatabaseAccessCode().findStudent(txtId.getText());
+                if (null!=selectedStudent){
+                    boolean isUpdated= new DatabaseAccessCode().updateStudent(student);
+                    if (isUpdated) {
+                        new Alert(Alert.AlertType.INFORMATION, "Updated!").show();
+                        setStudentId();
+                        clear();
+                        setTableData(searchText);
+                        btn.setText("Save Student");
+                    } else {
+                        new Alert(Alert.AlertType.WARNING, "Try Again").show();
+                    }
+                }
+            } catch (SQLException | ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, e.toString()).show();
+            }
         }
     }
 
-    private void clear(){
+    private void clear() {
         txtDob.setValue(null);
         //txtName.setText("");
         txtName.clear();
@@ -172,7 +199,7 @@ public class StudentFormController {
     private void setUi(String location) throws IOException {
         Stage stage = (Stage) context.getScene().getWindow();
         stage.setScene(new Scene(
-                FXMLLoader.load(getClass().getResource("../view/"+location+".fxml"))));
+                FXMLLoader.load(getClass().getResource("../view/" + location + ".fxml"))));
         stage.centerOnScreen();
     }
 

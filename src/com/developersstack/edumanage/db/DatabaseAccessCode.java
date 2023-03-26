@@ -2,7 +2,6 @@ package com.developersstack.edumanage.db;
 
 import com.developersstack.edumanage.model.Student;
 import com.developersstack.edumanage.model.User;
-import com.developersstack.edumanage.util.security.PasswordManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
