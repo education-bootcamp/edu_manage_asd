@@ -107,9 +107,6 @@ public class StudentFormController {
                             }catch (SQLException | ClassNotFoundException exception) {
                                 exception.printStackTrace();
                             }
-
-                            new Alert(Alert.AlertType.INFORMATION, "Deleted!").show();
-
                         }
                     });
                     obList.add(tm);
@@ -172,7 +169,7 @@ public class StudentFormController {
                         setStudentId();
                         clear();
                         setTableData(searchText);
-                        btn.setText("Save Student");
+                        btn.setText("Update Student");
                     } else {
                         new Alert(Alert.AlertType.WARNING, "Try Again").show();
                     }
