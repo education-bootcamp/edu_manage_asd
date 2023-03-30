@@ -9,16 +9,31 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class UserRepoImpl implements UserRepo {
     @Override
-    public boolean saveUser(User user) throws SQLException, ClassNotFoundException {
+    public boolean save(User user) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute("INSERT INTO user VALUES(?,?,?,?)",
                 user.getEmail(),user.getFirstName(),user.getLastName(),user.getPassword());
     }
 
     @Override
-    public User loginUser(String email) throws SQLException, ClassNotFoundException {
+    public boolean update(User user) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public boolean delete(String s) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+    @Override
+    public ArrayList<User> findAll() {
+        return null;
+    }
+
+    @Override
+    public User find(String email) throws SQLException, ClassNotFoundException {
         ResultSet rst = CrudUtil.execute("SELECT * FROM user WHERE email=?",email);
         if (rst.next()) {
             return new User(rst.getString(2),
