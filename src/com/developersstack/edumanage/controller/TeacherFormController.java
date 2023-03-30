@@ -1,8 +1,12 @@
 package com.developersstack.edumanage.controller;
 
+import com.developersstack.edumanage.bo.BoFactory;
+import com.developersstack.edumanage.bo.custom.TeacherBo;
+import com.developersstack.edumanage.dto.TeacherDto;
 import com.developersstack.edumanage.entity.Teacher;
 import com.developersstack.edumanage.repo.custom.TeacherRepo;
 import com.developersstack.edumanage.repo.custom.impl.TeacherRepoImpl;
+import com.developersstack.edumanage.util.enums.BoType;
 import com.developersstack.edumanage.view.tm.TeacherTm;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,7 +38,7 @@ public class TeacherFormController {
     public TextField txtContact;
 
     String searchText="";
-    private TeacherRepo teacherRepo = new TeacherRepoImpl();
+    private final TeacherBo teacherBo = BoFactory.getInstance().getBo(BoType.TEACHER);
 
     public void initialize(){
 
@@ -72,7 +76,7 @@ public class TeacherFormController {
     private void setTableData(String searchText) {
         ObservableList<TeacherTm> obList = FXCollections.observableArrayList();
         try {
-            for (Teacher t : teacherRepo.findAllTeachers(searchText)
+            for (TeacherDto t : teacherBo.searchTeachers(searchText)
             ) {
                     Button btn = new Button("Delete");
                     TeacherTm tm = new TeacherTm(
@@ -93,7 +97,7 @@ public class TeacherFormController {
                         if (buttonType.get().equals(ButtonType.YES)) {
 
                             try{
-                                boolean isDeleted = teacherRepo.deleteTeacher(t.getCode());
+                                boolean isDeleted = teacherBo.deleteTeacher(t.getCode());
                                 if (isDeleted) {
                                     new Alert(Alert.AlertType.INFORMATION, "Deleted!").show();
                                     setTableData(searchText);
@@ -116,7 +120,7 @@ public class TeacherFormController {
     }
 
     public void saveOnAction(ActionEvent actionEvent) {
-        Teacher teacher = new Teacher(
+        TeacherDto teacher = new TeacherDto(
                 txtId.getText(),
                 txtName.getText(),
                 txtAddress.getText(),
@@ -124,7 +128,7 @@ public class TeacherFormController {
         );
         if (btn.getText().equalsIgnoreCase("Save Teacher")){
             try {
-                boolean isSaved = teacherRepo.saveTeacher(teacher);
+                boolean isSaved = teacherBo.saveTeacher(teacher);
                 if (isSaved) {
                     setTeacherId();
                     clear();
@@ -140,9 +144,9 @@ public class TeacherFormController {
         }else {
 
             try {
-                Teacher selectedTeacher = teacherRepo.findTeacher(txtId.getText());
+                TeacherDto selectedTeacher = teacherBo.findTeacher(txtId.getText());
                 if (null != selectedTeacher) {
-                    boolean isUpdated = teacherRepo.updateTeacher(teacher);
+                    boolean isUpdated = teacherBo.updateTeacher(teacher);
                     if (isUpdated) {
                         new Alert(Alert.AlertType.INFORMATION, "Updated!").show();
                         setTeacherId();
@@ -169,7 +173,7 @@ public class TeacherFormController {
     private void setTeacherId() {
 
         try {
-            String selectedId = teacherRepo.findTeacherLastId();
+            String selectedId = teacherBo.findTeacherLastId();
             if (null != selectedId) {
                 String splitData[] = selectedId.split("-");
                 String lastIdIntegerNumberAsAString = splitData[1];

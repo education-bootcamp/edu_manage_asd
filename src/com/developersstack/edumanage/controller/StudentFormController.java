@@ -1,8 +1,12 @@
 package com.developersstack.edumanage.controller;
 
+import com.developersstack.edumanage.bo.BoFactory;
+import com.developersstack.edumanage.bo.custom.StudentBo;
+import com.developersstack.edumanage.dto.StudentDto;
 import com.developersstack.edumanage.entity.Student;
 import com.developersstack.edumanage.repo.custom.StudentRepo;
 import com.developersstack.edumanage.repo.custom.impl.StudentRepoImpl;
+import com.developersstack.edumanage.util.enums.BoType;
 import com.developersstack.edumanage.view.tm.StudentTm;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,7 +43,7 @@ public class StudentFormController {
     public TextField txtSearch;
 
     String searchText = "";
-    private StudentRepo studentRepo = new StudentRepoImpl();
+    private final StudentBo studentBo = BoFactory.getInstance().getBo(BoType.STUDENT);
 
     public void initialize() {
 
@@ -77,7 +81,7 @@ public class StudentFormController {
     private void setTableData(String searchText) {
         ObservableList<StudentTm> obList = FXCollections.observableArrayList();
         try {
-            for (Student st : studentRepo.findAllStudents(searchText)
+            for (StudentDto st : studentBo.searchStudents(searchText)
             ) {
                     Button btn = new Button("Delete");
                     StudentTm tm = new StudentTm(
@@ -97,7 +101,7 @@ public class StudentFormController {
                         Optional<ButtonType> buttonType = alert.showAndWait();
                         if (buttonType.get().equals(ButtonType.YES)) {
                             try{
-                                boolean isDeleted = studentRepo.deleteStudent(st.getStudentId());
+                                boolean isDeleted = studentBo.deleteStudent(st.getStudentId());
                                 if (isDeleted) {
                                     new Alert(Alert.AlertType.INFORMATION, "Student Deleted!").show();
                                     setTableData(searchText);
@@ -121,7 +125,7 @@ public class StudentFormController {
 
     private void setStudentId() {
         try {
-            String selectedId = studentRepo.findStudentLastId();
+            String selectedId = studentBo.findStudentLastId();
             if (null != selectedId) {
                 String splitData[] = selectedId.split("-");
                 String lastIdIntegerNumberAsAString = splitData[1];
@@ -138,7 +142,7 @@ public class StudentFormController {
     }
 
     public void saveOnAction(ActionEvent actionEvent) {
-        Student student = new Student(
+        StudentDto student = new StudentDto(
                 txtId.getText(),
                 txtName.getText(),
                 Date.from(txtDob.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
@@ -146,7 +150,7 @@ public class StudentFormController {
         );
         if (btn.getText().equalsIgnoreCase("Save Student")) {
             try {
-                boolean isSaved = studentRepo.saveStudent(student);
+                boolean isSaved = studentBo.saveStudent(student);
                 if (isSaved) {
                     new Alert(Alert.AlertType.INFORMATION, "Student Saved!").show();
                     setStudentId();
@@ -162,9 +166,9 @@ public class StudentFormController {
         } else {
 
             try {
-                Student selectedStudent = studentRepo.findStudent(txtId.getText());
+                StudentDto selectedStudent = studentBo.findStudent(txtId.getText());
                 if (null!=selectedStudent){
-                    boolean isUpdated= studentRepo.updateStudent(student);
+                    boolean isUpdated= studentBo.updateStudent(student);
                     if (isUpdated) {
                         new Alert(Alert.AlertType.INFORMATION, "Updated!").show();
                         setStudentId();

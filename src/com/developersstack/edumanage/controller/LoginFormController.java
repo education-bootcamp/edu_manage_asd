@@ -1,8 +1,12 @@
 package com.developersstack.edumanage.controller;
 
+import com.developersstack.edumanage.bo.BoFactory;
+import com.developersstack.edumanage.bo.custom.UserBo;
+import com.developersstack.edumanage.dto.UserDto;
 import com.developersstack.edumanage.entity.User;
 import com.developersstack.edumanage.repo.custom.UserRepo;
 import com.developersstack.edumanage.repo.custom.impl.UserRepoImpl;
+import com.developersstack.edumanage.util.enums.BoType;
 import com.developersstack.edumanage.util.security.PasswordManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +24,7 @@ public class LoginFormController {
     public AnchorPane context;
     public TextField txtEmail;
     public PasswordField txtPassword;
-    private UserRepo userRepo = new UserRepoImpl();
+    private final UserBo userBo = BoFactory.getInstance().getBo(BoType.USER);
 
     public void forgotPasswordOnAction(ActionEvent actionEvent) throws IOException {
         setUi("ForgotPasswordForm");
@@ -31,7 +35,7 @@ public class LoginFormController {
         String password = txtPassword.getText().trim();
 
         try{
-            User selectedUser = userRepo.loginUser(email);
+            UserDto selectedUser = userBo.findUser(email);
             if (null!=selectedUser){
                 if (new PasswordManager().checkPassword(password,selectedUser.getPassword())){
                     setUi("DashboardForm");
