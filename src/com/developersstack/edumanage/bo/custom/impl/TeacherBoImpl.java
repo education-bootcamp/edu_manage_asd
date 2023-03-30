@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class TeacherBoImpl implements TeacherBo {
 
-    private final TeacherRepo teacherRepo= (TeacherRepo) RepoFactory.getInstance().getRepo(RepoType.TEACHER);
+    private final TeacherRepo teacherRepo= RepoFactory.getInstance().getRepo(RepoType.TEACHER);
 
     @Override
     public boolean saveTeacher(TeacherDto dto) throws SQLException, ClassNotFoundException {

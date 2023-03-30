@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class StudentBoImpl implements StudentBo {
 
-    private final StudentRepo studentRepo =(StudentRepo) RepoFactory.getInstance().getRepo(RepoType.STUDENT);
+    private final StudentRepo studentRepo = RepoFactory.getInstance().getRepo(RepoType.STUDENT);
 
     @Override
     public boolean saveStudent(StudentDto dto) throws SQLException, ClassNotFoundException {

@@ -2,7 +2,7 @@ package com.developersstack.edumanage.entity;
 
 import java.util.Date;
 
-public class Student {
+public class Student  implements SuperEntity{
     private String studentId;
     private String fullName;
     private Date dateOfBirth;

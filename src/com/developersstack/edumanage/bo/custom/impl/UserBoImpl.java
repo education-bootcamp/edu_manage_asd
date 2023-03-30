@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class UserBoImpl implements UserBo {
 
 
-    private final UserRepo userRepo = (UserRepo) RepoFactory.getInstance().getRepo(RepoType.USER);
+    private final UserRepo userRepo = RepoFactory.getInstance().getRepo(RepoType.USER);
     private final PasswordManager passwordManager = new PasswordManager();
     @Override
     public boolean saveUser(UserDto dto) throws SQLException, ClassNotFoundException {

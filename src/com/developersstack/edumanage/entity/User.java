@@ -1,6 +1,6 @@
 package com.developersstack.edumanage.entity;
 
-public class User {
+public class User  implements SuperEntity{
     private String firstName;
     private String lastName;
     private String email;

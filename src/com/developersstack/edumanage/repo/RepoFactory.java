@@ -13,14 +13,14 @@ public class RepoFactory {
         return (null==repoFactory)?(repoFactory= new RepoFactory()):repoFactory;
     }
 
-    public SuperRepo getRepo(RepoType type){
+    public <T> T  getRepo(RepoType type){
         switch (type){
             case TEACHER:
-                return new TeacherRepoImpl();
+                return (T) new TeacherRepoImpl();
             case USER:
-                return new UserRepoImpl();
+                return (T) new UserRepoImpl();
             case STUDENT:
-                return new StudentRepoImpl();
+                return (T) new StudentRepoImpl();
             default:
                 return null;
         }

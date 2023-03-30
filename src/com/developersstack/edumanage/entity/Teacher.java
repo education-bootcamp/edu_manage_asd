@@ -1,6 +1,6 @@
 package com.developersstack.edumanage.entity;
 
-public class Teacher {
+public class Teacher implements SuperEntity {
     private String code;
     private String name;
     private String address;

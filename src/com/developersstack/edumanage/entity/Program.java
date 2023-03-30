@@ -2,7 +2,7 @@ package com.developersstack.edumanage.entity;
 
 import java.util.Arrays;
 
-public class Program {
+public class Program  implements SuperEntity{
     private String code;
     private String name;
     private String[] technologies;
