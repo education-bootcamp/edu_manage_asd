@@ -3,15 +3,17 @@ package com.developersstack.edumanage.bo.custom.impl;
 import com.developersstack.edumanage.bo.custom.TeacherBo;
 import com.developersstack.edumanage.dto.TeacherDto;
 import com.developersstack.edumanage.entity.Teacher;
+import com.developersstack.edumanage.repo.RepoFactory;
 import com.developersstack.edumanage.repo.custom.TeacherRepo;
 import com.developersstack.edumanage.repo.custom.impl.TeacherRepoImpl;
+import com.developersstack.edumanage.util.enums.RepoType;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class TeacherBoImpl implements TeacherBo {
 
-    private final TeacherRepo teacherRepo= new TeacherRepoImpl();
+    private final TeacherRepo teacherRepo= (TeacherRepo) RepoFactory.getInstance().getRepo(RepoType.TEACHER);
 
     @Override
     public boolean saveTeacher(TeacherDto dto) throws SQLException, ClassNotFoundException {

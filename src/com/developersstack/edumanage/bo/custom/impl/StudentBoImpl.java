@@ -3,15 +3,17 @@ package com.developersstack.edumanage.bo.custom.impl;
 import com.developersstack.edumanage.bo.custom.StudentBo;
 import com.developersstack.edumanage.dto.StudentDto;
 import com.developersstack.edumanage.entity.Student;
+import com.developersstack.edumanage.repo.RepoFactory;
 import com.developersstack.edumanage.repo.custom.StudentRepo;
 import com.developersstack.edumanage.repo.custom.impl.StudentRepoImpl;
+import com.developersstack.edumanage.util.enums.RepoType;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class StudentBoImpl implements StudentBo {
 
-    private final StudentRepo studentRepo = new StudentRepoImpl();
+    private final StudentRepo studentRepo =(StudentRepo) RepoFactory.getInstance().getRepo(RepoType.STUDENT);
 
     @Override
     public boolean saveStudent(StudentDto dto) throws SQLException, ClassNotFoundException {

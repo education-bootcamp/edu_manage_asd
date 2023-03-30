@@ -3,8 +3,11 @@ package com.developersstack.edumanage.bo.custom.impl;
 import com.developersstack.edumanage.bo.custom.UserBo;
 import com.developersstack.edumanage.dto.UserDto;
 import com.developersstack.edumanage.entity.User;
+import com.developersstack.edumanage.repo.RepoFactory;
+import com.developersstack.edumanage.repo.custom.StudentRepo;
 import com.developersstack.edumanage.repo.custom.UserRepo;
 import com.developersstack.edumanage.repo.custom.impl.UserRepoImpl;
+import com.developersstack.edumanage.util.enums.RepoType;
 import com.developersstack.edumanage.util.security.PasswordManager;
 
 import java.sql.SQLException;
@@ -12,7 +15,7 @@ import java.sql.SQLException;
 public class UserBoImpl implements UserBo {
 
 
-    private final UserRepo userRepo = new UserRepoImpl();
+    private final UserRepo userRepo = (UserRepo) RepoFactory.getInstance().getRepo(RepoType.USER);
     private final PasswordManager passwordManager = new PasswordManager();
     @Override
     public boolean saveUser(UserDto dto) throws SQLException, ClassNotFoundException {
